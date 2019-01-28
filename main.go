@@ -13,17 +13,19 @@ import (
 
 func main() {
 	filename := flag.String("o", "rtt.txt", "output filename")
+	port := flag.Int("p", 1234, "server port")
 	flag.Parse()
+
 	file, err := os.Create(*filename)
 	if err != nil {
 		panic(err)
 	}
-	if err := run(file); err != nil {
+	if err := run(file, *port); err != nil {
 		panic(err)
 	}
 }
 
-func run(output io.Writer) error {
+func run(output io.Writer, port int) error {
 	const runTime = 3 * time.Second
 	const interval = time.Millisecond
 	const numPackets = uint64(runTime / interval)
@@ -32,7 +34,7 @@ func run(output io.Writer) error {
 
 	sendTimes := make(map[uint64]time.Time)
 
-	saddr, err := net.ResolveUDPAddr("udp", "localhost:0")
+	saddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("localhost:%d", port))
 	if err != nil {
 		return err
 	}
