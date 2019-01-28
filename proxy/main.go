@@ -2,23 +2,28 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"net"
 )
 
 func main() {
-	if err := run(); err != nil {
+	port := flag.Int("p", 10001, "proxy port")
+	serverPort := flag.Int("s", 1234, "server port")
+	flag.Parse()
+
+	if err := run(*port, *serverPort); err != nil {
 		panic(err)
 	}
 }
 
-func run() error {
-	receiverAddr, err := net.ResolveUDPAddr("udp", "localhost:1234")
+func run(port, serverPort int) error {
+	receiverAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("localhost:%d", serverPort))
 	if err != nil {
 		return err
 	}
 
-	saddr, err := net.ResolveUDPAddr("udp", "localhost:10001")
+	saddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("localhost:%d", port))
 	if err != nil {
 		return err
 	}
