@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"flag"
 	"fmt"
 	"io"
 	"net"
@@ -11,7 +12,9 @@ import (
 )
 
 func main() {
-	file, err := os.Create("rtt.txt")
+	filename := flag.String("o", "rtt.txt", "output filename")
+	flag.Parse()
+	file, err := os.Create(*filename)
 	if err != nil {
 		panic(err)
 	}
