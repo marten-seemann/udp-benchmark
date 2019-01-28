@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/binary"
 	"flag"
 	"fmt"
@@ -21,7 +22,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := run(file, *port, *proxyPort); err != nil {
+	defer file.Close()
+	w := bufio.NewWriterSize(file, 10*1<<20)
+	defer w.Flush()
+	if err := run(w, *port, *proxyPort); err != nil {
 		panic(err)
 	}
 }
