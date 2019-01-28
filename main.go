@@ -14,18 +14,19 @@ import (
 func main() {
 	filename := flag.String("o", "rtt.txt", "output filename")
 	port := flag.Int("p", 1234, "server port")
+	proxyPort := flag.Int("proxy", 10001, "proxy port")
 	flag.Parse()
 
 	file, err := os.Create(*filename)
 	if err != nil {
 		panic(err)
 	}
-	if err := run(file, *port); err != nil {
+	if err := run(file, *port, *proxyPort); err != nil {
 		panic(err)
 	}
 }
 
-func run(output io.Writer, port int) error {
+func run(output io.Writer, port, proxyPort int) error {
 	const runTime = 3 * time.Second
 	const interval = time.Millisecond
 	const numPackets = uint64(runTime / interval)
@@ -69,7 +70,11 @@ func run(output io.Writer, port int) error {
 	if err != nil {
 		return err
 	}
-	cconn, err := net.DialUDP("udp", caddr, sconn.LocalAddr().(*net.UDPAddr))
+	proxyAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("localhost:%d", proxyPort))
+	if err != nil {
+		return err
+	}
+	cconn, err := net.DialUDP("udp", caddr, proxyAddr)
 	if err != nil {
 		return err
 	}
