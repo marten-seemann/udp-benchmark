@@ -16,6 +16,7 @@ func main() {
 	filename := flag.String("o", "rtt.txt", "output filename")
 	port := flag.Int("p", 1234, "server port")
 	proxyPort := flag.Int("proxy", 10001, "proxy port")
+	intervalMus := flag.Int("i", 10, "send interval (µs)")
 	flag.Parse()
 
 	file, err := os.Create(*filename)
@@ -25,15 +26,15 @@ func main() {
 	defer file.Close()
 	w := bufio.NewWriterSize(file, 10*1<<20)
 	defer w.Flush()
-	if err := run(w, *port, *proxyPort); err != nil {
+	interval := time.Duration(*intervalMus) * time.Microsecond
+	if err := run(w, *port, *proxyPort, interval); err != nil {
 		panic(err)
 	}
 }
 
-func run(output io.Writer, port, proxyPort int) error {
-	const runTime = 3 * time.Second
-	const interval = time.Millisecond
-	const numPackets = uint64(runTime / interval)
+func run(output io.Writer, port, proxyPort int, interval time.Duration) error {
+	const runTime = 2 * time.Second
+	var numPackets = uint64(runTime / interval)
 
 	var mutex sync.Mutex
 
