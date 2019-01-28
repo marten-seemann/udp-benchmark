@@ -63,8 +63,8 @@ func run(port, serverPort int, delay time.Duration) error {
 
 func runUpstream(sconn, cconn *net.UDPConn, receiverAddr *net.UDPAddr, clientAddrChan chan<- *net.UDPAddr, delay time.Duration) error {
 	var hasClientAddr bool
-	b := make([]byte, 8)
 	for {
+		b := make([]byte, 8)
 		n, addr, err := sconn.ReadFromUDP(b)
 		if err != nil {
 			return err
@@ -86,8 +86,8 @@ func runUpstream(sconn, cconn *net.UDPConn, receiverAddr *net.UDPAddr, clientAdd
 
 func runDownstream(sconn, cconn *net.UDPConn, clientAddrChan <-chan *net.UDPAddr, delay time.Duration) error {
 	senderAddr := <-clientAddrChan
-	b := make([]byte, 8)
 	for {
+		b := make([]byte, 8)
 		n, _, err := cconn.ReadFromUDP(b)
 		if err != nil {
 			return err
