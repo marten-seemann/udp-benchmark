@@ -1,2 +1,6 @@
 *.txt
 *.dat
+
+cpp/client/client
+cpp/server/server
+cpp/proxy/proxy
