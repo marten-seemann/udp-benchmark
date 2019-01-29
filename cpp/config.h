@@ -4,3 +4,4 @@
 #define SERVER_PORT 5000
 #define NUM_PACKETS 10000
 #define MSGLEN 8
+#define DELAY 1000 // in mus

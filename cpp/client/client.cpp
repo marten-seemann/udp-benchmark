@@ -36,7 +36,7 @@ int main(int argc, const char * argv[]) {
             exit(1);
         }
         sendTimes[pn] = std::chrono::duration_cast<std::chrono::nanoseconds>(clock.now().time_since_epoch()).count();
-        usleep(100);
+        usleep(DELAY);
     }
 
     std::ofstream outdata; 
